@@ -1,10 +1,51 @@
 <?php
 namespace app\index\controller;
+use think\Controller;
+use think\Loader;
 
-class Index
-{
-    public function index()
-    {
-        return '<style type="text/css">*{ padding: 0; margin: 0; } .think_default_text{ padding: 4px 48px;} a{color:#2E5CD5;cursor: pointer;text-decoration: none} a:hover{text-decoration:underline; } body{ background: #fff; font-family: "Century Gothic","Microsoft yahei"; color: #333;font-size:18px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.6em; font-size: 42px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p> ThinkPHP V5<br/><span style="font-size:30px">十年磨一剑 - 为API开发设计的高性能框架</span></p><span style="font-size:22px;">[ V5.0 版本由 <a href="http://www.qiniu.com" target="qiniu">七牛云</a> 独家赞助发布 ]</span></div><script type="text/javascript" src="https://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script><script type="text/javascript" src="https://e.topthink.com/Public/static/client.js"></script><think id="ad_bd568ce7058a1091"></think>';
-    }
+class Index extends Controller {
+	public function _initialize() {
+		Loader::import('qq_ai.sdk.API');
+		Loader::import('qq_ai.sdk.Configer');
+		Loader::import('qq_ai.sdk.HttpUtil');
+		Loader::import('qq_ai.sdk.Signature');
+		//请在此填入AppID与AppKey
+		$app_id = '1106878837';
+		$app_key = '3Rj7EszbrLTAxTCf';
+		//设置AppID与AppKey
+		Configer::setAppInfo($app_id, $app_key);
+	}
+	public function index() {
+		$app_id = '1106878837';
+		$app_key = '3Rj7EszbrLTAxTCf';
+		$configer = Configer::setAppInfo($app_id, $app_key);
+		if ($configer) {
+			return 'OK';
+		} else {
+			return 'ERROR';
+		}
+	}
+	// 人脸融合接口
+	public function facemerge() {
+		$params = [];
+		$response = API::ptu_facemerge($params);
+		$arr = json_decode($response, 1);
+		$img_name = time();
+		$out_img = ROOT_PATH . 'public' . DS . 'uploads' . DS . $img_name . ".jpg";
+		$res = file_put_contents($out_img, base64_decode($arr['data']['image']));
+		// exit($arr['data']['image']);
+		// exit($response);
+		if ($res) {
+			$data = array(
+				'code' => 200,
+				'image' => $out_img,
+			);
+		} else {
+			$data = array(
+				'code' => 200,
+				'image' => $out_img,
+			);
+		}
+		exit(json_encode($data));
+	}
 }
