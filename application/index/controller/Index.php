@@ -2,6 +2,7 @@
 namespace app\index\controller;
 use think\Controller;
 use think\Loader;
+use think\Request;
 
 class Index extends Controller {
 	public function _initialize() {
@@ -33,17 +34,19 @@ class Index extends Controller {
 		$img_name = time();
 		$out_img = ROOT_PATH . 'public' . DS . 'uploads' . DS . $img_name . ".jpg";
 		$res = file_put_contents($out_img, base64_decode($arr['data']['image']));
-		// exit($arr['data']['image']);
-		// exit($response);
+		$request = Request::instance();
+
+		$domain = $request->domain();
 		if ($res) {
 			$data = array(
-				'code' => 200,
-				'image' => $out_img,
+				'code' => 200200,
+				'image' => $domain . '/uploads/' . $img_name . ".jpg",
+				'msg' => '融合成功',
 			);
 		} else {
 			$data = array(
-				'code' => 200,
-				'image' => $out_img,
+				'code' => 200400,
+				'msg' => '融合失败',
 			);
 		}
 		exit(json_encode($data));
