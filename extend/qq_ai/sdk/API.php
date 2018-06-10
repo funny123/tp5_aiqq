@@ -117,8 +117,12 @@ class API {
 
 	public static function ptu_facemerge($params) {
 		// 图片base64编码
-
-		$path = ROOT_PATH . 'public' . DS . 'uploads' . DS . "111.jpg";
+		// $file = request()->file('image');
+		// print_r($params);exit;
+		// $file = request()->file('image');
+		// $path = ROOT_PATH . 'public' . DS . 'uploads' . DS . "111.jpg";
+		$path = $params['image'];
+		$model = $params['model'];
 		$data = file_get_contents($path);
 		$base64 = base64_encode($data);
 
@@ -128,7 +132,7 @@ class API {
 		$params = array(
 			'app_id' => '1106878837',
 			'image' => $base64,
-			'model' => '28',
+			'model' => $model,
 			'time_stamp' => strval(time()),
 			'nonce_str' => strval(rand()),
 			'sign' => '',
