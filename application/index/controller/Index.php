@@ -132,4 +132,30 @@ class Index extends Controller {
 		}
 		exit(json_encode($data));
 	}
+	// 大头贴接口
+	public function facesticker() {
+		$request = Request::instance();
+		// print_r($request);exit;
+		$params = Request::instance()->param(true);
+		$response = API::ptu_facemerge($params);
+		$arr = json_decode($response, 1);
+		$img_name = time();
+		$out_img = ROOT_PATH . 'public' . DS . 'uploads' . DS . $img_name . ".jpg";
+		$res = file_put_contents($out_img, base64_decode($arr['data']['image']));
+
+		$domain = $request->domain();
+		if ($res) {
+			$data = array(
+				'code' => 200200,
+				'image' => $domain . '/uploads/' . $img_name . ".jpg",
+				'msg' => '融合成功',
+			);
+		} else {
+			$data = array(
+				'code' => 200400,
+				'msg' => '融合失败',
+			);
+		}
+		exit(json_encode($data));
+	}
 }

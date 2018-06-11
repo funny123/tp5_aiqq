@@ -89,9 +89,10 @@ class API {
 	}
 /**
  */
-	public static function wxface_pitu($params) {
+	public static function ptu_facesticker($params) {
 		// 图片base64编码
-		$path = './data/111.jpg';
+		$path = $params['image'];
+		$model = $params['model'];
 		$data = file_get_contents($path);
 		$base64 = base64_encode($data);
 
@@ -101,7 +102,7 @@ class API {
 		$params = array(
 			'app_id' => '1106878837',
 			'image' => $base64,
-			'sticker' => '31',
+			'sticker' => $model,
 			'time_stamp' => strval(time()),
 			'nonce_str' => strval(rand()),
 			'sign' => '',
